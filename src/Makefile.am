@@ -1,7 +1,9 @@
 lib_LTLIBRARIES = libcrazyradio.la
 noinst_PROGRAMS = rx-test tx-test
 
-libcrazyradio_la_SOURCES = crazyradio.c
+include_HEADERS = crazyradio.h
+
+libcrazyradio_la_SOURCES = crazyradio.c crazyradio.h
 libcrazyradio_la_LIBS = @USB_LIBS@
 libcrazyradio_la_CFLAGS = @USB_CFLAGS@
 
