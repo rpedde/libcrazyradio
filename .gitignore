@@ -12,7 +12,6 @@ missing
 Makefile
 Makefile.in
 libtool
-m4
 ar-lib
 .libs
 *.la
