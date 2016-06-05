@@ -43,7 +43,8 @@
 #define CR_ERR_BADARDTIME   5
 #define CR_ERR_BADARDPKT    6
 #define CR_ERR_BADMODE      7
-#define CR_ERR_LAST         8
+#define CR_ERR_NODEVICE     8
+#define CR_ERR_LAST         9
 
 
 static const char *errtext[] = {
@@ -54,7 +55,8 @@ static const char *errtext[] = {
     "Invalid retry count (must be 0-15)",
     "Invalid retry delay time (must be =< 4000)",
     "invalid retry packet size (must be 0-32)",
-    "Invalid mode (must be 0 or 2)"
+    "Invalid mode (must be 0 or 2)",
+    "No VID/PID found (or not enough)"
 };
 
 static libusb_context *context = NULL;
@@ -63,20 +65,29 @@ static int last_error_type = 0;
 static void (*log_method)(int, char*, va_list) = NULL;
 static int config_timeout = 1000;
 
+/* Forwards */
+static void cradio_log(int level, char *format, ...);
+
+
 int cradio_init(void) {
     int rc;
 
     rc = libusb_init(&context);
     /* libusb_set_debug(context, LIBUSB_LOG_LEVEL_DEBUG); */
+
+    CRDEBUG("initialized libcrazyradio");
+
     return rc;
 }
 
 void cradio_set_log_method(void(*fp)(int, char*, va_list)) {
     log_method = fp;
+    CRDEBUG("set libcrazyradio log function");
 }
 
 void cradio_set_config_timeout(int timeout) {
     config_timeout = timeout;
+    CRDEBUG("set libcrazyradio default to %d", timeout);
 }
 
 const char *cradio_get_errorstr(void) {
