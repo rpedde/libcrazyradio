@@ -44,7 +44,8 @@
 #define CR_ERR_BADARDPKT    6
 #define CR_ERR_BADMODE      7
 #define CR_ERR_NODEVICE     8
-#define CR_ERR_LAST         9
+#define CR_ERR_NOTENOUGH    9
+#define CR_ERR_LAST         10
 
 
 static const char *errtext[] = {
@@ -56,7 +57,8 @@ static const char *errtext[] = {
     "Invalid retry delay time (must be =< 4000)",
     "invalid retry packet size (must be 0-32)",
     "Invalid mode (must be 0 or 2)",
-    "No VID/PID found (or not enough)"
+    "No crazyradio VID/PID found",
+    "Cannot find specific radio device"
 };
 
 static libusb_context *context = NULL;
@@ -154,6 +156,7 @@ cradio_device_t *cradio_get(int device_id) {
     int count;
     int rc;
     int res;
+    int devfound = 0;
 
     CRDEBUG("Walking usb device list");
 
@@ -175,6 +178,7 @@ cradio_device_t *cradio_get(int device_id) {
             if((desc.idVendor == CRADIO_VID) && \
                (desc.idProduct == CRADIO_PID)) {
                 CRDEBUG("Found crazyradio device");
+                devfound = 1;
 
                 if((device_id == devidx) || (device_id == -1)) {
                     CRDEBUG("Claiming this USB device");
@@ -249,6 +253,7 @@ cradio_device_t *cradio_get(int device_id) {
         }
     }
     libusb_free_device_list(list, 1);
+    set_cradio_error(devfound ? CR_ERR_NOTENOUGH : CR_ERR_NODEVICE);
     return NULL;
 }
 
