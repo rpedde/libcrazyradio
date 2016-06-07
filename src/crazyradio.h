@@ -42,6 +42,9 @@
 #define CONF_GET_SCAN_CHANNELS   0x21
 #define CONF_SET_RADIO_MODE      0x22
 
+#define AUTO_ACK_DISABLED        0x00
+#define AUTO_ACK_ENABLED         0x01
+
 #define DATA_RATE_250KBPS        0x00
 #define DATA_RATE_1MBPS          0x01
 #define DATA_RATE_2MBPS          0x02
