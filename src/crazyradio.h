@@ -61,7 +61,7 @@ typedef struct cradio_device_t {
     void *pusb_handle;
 } cradio_device_t;
 
-typedef uint8_t cradio_address[5];
+typedef uint8_t *cradio_address;
 
 extern int cradio_init(void);
 extern cradio_device_t *cradio_get(int);
@@ -72,7 +72,7 @@ extern void cradio_set_config_timeout(int timeout);
 extern const char *cradio_get_errorstr(void);
 
 extern int cradio_set_channel(cradio_device_t *prd, uint16_t channel);
-extern int cradio_set_address(cradio_device_t *prd, cradio_address *address);
+extern int cradio_set_address(cradio_device_t *prd, cradio_address address);
 extern int cradio_set_data_rate(cradio_device_t *prd, uint16_t data_rate);
 extern int cradio_set_power(cradio_device_t *prd, uint16_t power);
 extern int cradio_set_arc(cradio_device_t *prd, uint16_t arc);

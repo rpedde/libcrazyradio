@@ -111,10 +111,12 @@ static int set_error(int error_type, int error_code) {
 }
 
 static int set_usb_error(int error_code) {
+    CRDEBUG("Setting usb error of %02x", error_code);
     return set_error(ERROR_TYPE_USB, error_code);
 }
 
 static int set_cradio_error(int error_code) {
+    CRDEBUG("Setting local error of %02x", error_code);
     return set_error(ERROR_TYPE_CRADIO, error_code);
 }
 
@@ -269,7 +271,7 @@ static int cradio_send_config(cradio_device_t *prd, uint8_t request,
                                  request, value, index, data, length,
                                  config_timeout);
 
-    if(rc)
+    if(rc != length)
         return set_usb_error(rc);
 
     return 0;
@@ -297,7 +299,7 @@ int cradio_set_channel(cradio_device_t *prd, uint16_t channel) {
  *
  * The default address is 0xE7E7E7E7E7
  */
-int cradio_set_address(cradio_device_t *prd, cradio_address *address) {
+int cradio_set_address(cradio_device_t *prd, cradio_address address) {
     CRDEBUG("Setting address to %02x %02x %02x %02x %02x", address[0],
             address[1], address[2], address[3], address[4]);
 
@@ -409,7 +411,7 @@ static int cradio_xfer_packet(cradio_device_t *prd, unsigned char endpoint,
 
     libusb_device_handle *handle = (libusb_device_handle*)prd->pusb_handle;
 
-    CRDEBUG("%sing %d bytes", endpoint & 0x80 ? "send" : "receiv", len);
+    CRDEBUG("%sing %d bytes", endpoint & 0x80 ? "receiv" : "send", len);
     rc = libusb_bulk_transfer(handle, endpoint, buffer, len, &xferred, timeout);
     if(rc && rc != LIBUSB_ERROR_TIMEOUT)
         return set_usb_error(rc);
