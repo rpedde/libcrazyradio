@@ -341,7 +341,7 @@ int cradio_set_power(cradio_device_t *prd, uint16_t power) {
 
 /* Set ack enable */
 int cradio_set_ack_enable(cradio_device_t *prd, uint16_t enable_status) {
-    CRDEBUG("%sabling auto-ack", enable_status ? "en", "dis");
+    CRDEBUG("%sabling auto-ack", enable_status ? "en" : "dis");
     return cradio_send_config(prd, CONF_ACK_ENABLE, enable_status, 0, NULL, 0);
 }
 
