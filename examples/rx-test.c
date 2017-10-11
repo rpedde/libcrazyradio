@@ -20,9 +20,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "crazyradio.h"
+#include <crazyradio.h>
 
-#include "config.h"
+#define VERSION "0.1"
 
 int main(int argc, char *argv[]) {
     cradio_device_t *dev;

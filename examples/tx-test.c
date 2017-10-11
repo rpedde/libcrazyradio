@@ -23,9 +23,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "crazyradio.h"
+#include <crazyradio.h>
 
-#include "config.h"
+#define VERSION "0.1"
 
 int debug_level = 2;
 
