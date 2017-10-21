@@ -20,6 +20,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
+
 #include <crazyradio.h>
 
 #define VERSION "0.1"

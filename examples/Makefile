@@ -1,7 +1,7 @@
 CC         = gcc
 CFLAGS     = -std=c99
 OUTFLAG    = -o
-LIBS       = -lusb-1.0 -lcrazyradio
+LIBS       = -lcrazyradio -lusb-1.0
 TARGET     = tx-test rx-test
 
 all:  $(TARGET)

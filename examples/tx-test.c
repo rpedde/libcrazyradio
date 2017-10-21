@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <stdarg.h>
 #include <crazyradio.h>
 
 #define VERSION "0.1"
