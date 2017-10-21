@@ -1,5 +1,5 @@
 /*
- * Example receiver program
+ * Example transmitter program
  *
  * Copyright (C) 2016 Ron Pedde (ron@pedde.com)
  *
@@ -20,9 +20,22 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "crazyradio.h"
+#include <string.h>
+#include <unistd.h>
+#include <stdarg.h>
+#include <crazyradio.h>
 
-#include "config.h"
+#define VERSION "0.1"
+
+int debug_level = 2;
+
+void print_log_msg(int level, char *format, va_list args) {
+    if(level <= debug_level) {
+        vfprintf(stderr, format, args);
+        fprintf(stderr, "\n");
+    }
+}
+
 
 int main(int argc, char *argv[]) {
     cradio_device_t *dev;
@@ -30,11 +43,14 @@ int main(int argc, char *argv[]) {
     int res;
     int radio_id = -1;
 
+    debug_level = 5;
+    cradio_set_log_method(print_log_msg);
+
     if(argc > 1) {
         radio_id = atoi(argv[1]);
     }
 
-    fprintf(stderr, "rx-test: version %s\n", VERSION);
+    fprintf(stderr, "tx-test: version %s\n", VERSION);
 
     cradio_init();
     dev = cradio_get(radio_id);
@@ -50,17 +66,24 @@ int main(int argc, char *argv[]) {
 
     if(cradio_set_channel(dev, 100) ||
        cradio_set_data_rate(dev, DATA_RATE_250KBPS) ||
-       cradio_set_mode(dev, MODE_PRX)) {
+       cradio_set_mode(dev, MODE_PTX)) {
         fprintf(stderr, "error setting up radio: %s\n", cradio_get_errorstr());
         exit(EXIT_FAILURE);
     }
 
+    int count = 0;
+
     while(1) {
-        res = cradio_read_packet(dev, buffer, 64, 0);
+        sprintf(buffer, "test packet %d", count++);
+
+        printf("Sending packet...\n");
+
+        res = cradio_write_packet(dev, buffer, strlen(buffer) + 1, 1000);
         if(res < 0) {
-            fprintf(stderr, "error reading: %s\n", cradio_get_errorstr());
+            fprintf(stderr, "error writing: %s\n", cradio_get_errorstr());
             exit(EXIT_FAILURE);
         }
-        printf("received %d bytes of data: %s\n", res, buffer);
+        printf("Wrote packet: %s\n", buffer);
+        sleep(5);
     }
 }
